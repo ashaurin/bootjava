@@ -3,6 +3,11 @@ package ru.javaops.bootjava.util.validation;
 import lombok.experimental.UtilityClass;
 import ru.javaops.bootjava.HasId;
 import ru.javaops.bootjava.error.IllegalRequestDataException;
+import ru.javaops.bootjava.error.OutOfTimeException;
+
+import java.time.LocalDateTime;
+
+import static java.time.LocalDateTime.of;
 
 @UtilityClass
 public class ValidationUtil {
@@ -19,6 +24,13 @@ public class ValidationUtil {
             bean.setId(id);
         } else if (bean.id() != id) {
             throw new IllegalRequestDataException(bean.getClass().getSimpleName() + " must has id=" + id);
+        }
+    }
+
+    public static void checkTime() {
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isAfter(of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 11, 0)) ) {
+            throw new OutOfTimeException(" It is too late, vote can't be changed");
         }
     }
 }
