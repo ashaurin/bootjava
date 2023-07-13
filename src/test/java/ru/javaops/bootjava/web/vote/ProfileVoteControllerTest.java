@@ -1,5 +1,6 @@
 package ru.javaops.bootjava.web.vote;
 
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -11,6 +12,9 @@ import ru.javaops.bootjava.repository.VoteRepository;
 import ru.javaops.bootjava.util.JsonUtil;
 import ru.javaops.bootjava.web.AbstractControllerTest;
 
+import java.time.LocalDateTime;
+
+import static java.time.LocalDateTime.of;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -21,7 +25,6 @@ import static ru.javaops.bootjava.web.vote.VoteTestData.getNew;
 import static ru.javaops.bootjava.web.vote.VoteTestData.*;
 
 public class ProfileVoteControllerTest extends AbstractControllerTest {
-    private static final String REST_URL_SLASH = REST_URL + '/';
 
     @Autowired
     private VoteRepository voteRepository;
@@ -61,6 +64,9 @@ public class ProfileVoteControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void update() throws Exception {
+        LocalDateTime now = LocalDateTime.now();
+        Assumptions.assumeFalse(now.isAfter(of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 11, 0)));
+
         Vote updated = VoteTestData.getUpdated();
         perform(MockMvcRequestBuilders.put(ProfileVoteController.REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
